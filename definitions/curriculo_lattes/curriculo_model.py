@@ -1,3 +1,7 @@
+######
+# versao para o XSD de 2022-09-12
+######
+
 from __future__ import annotations
 
 from dataclasses import dataclass, field

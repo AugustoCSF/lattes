@@ -1,4 +1,4 @@
-from curriculo_lattes.xml_cvbase_src_main_resources_curriculo_lattes_12_09_2022 import (
+from definitions.curriculo_lattes.curriculo_model import (
     Aperfeicoamento,
     AperfeicoamentoStatusDoCurso,
     ApresentacaoDeObraArtistica,
