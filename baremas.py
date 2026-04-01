@@ -459,6 +459,7 @@ def pontosAva(pesq, ava):
 
 
 def geraHTML2025(p):
+def geraHTML2025(p):
     tit = 0
     sRes = []
     sRes.append('<!DOCTYPE html>')
