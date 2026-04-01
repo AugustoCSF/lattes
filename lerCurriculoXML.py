@@ -842,8 +842,8 @@ def main():
     global pq
 
     pasta_curriculos = 'curriculos'
-    ano_fim = 2025
-    ano_inicio = ano_fim - 3 # 3 anos anteriores
+    ano_fim = 2026
+    ano_inicio = ano_fim - 5 # 3 anos anteriores
     anos_validos = [str(a) for a in range(ano_inicio, ano_fim)]
 
     resumo_total = resumo.copy()
@@ -875,7 +875,7 @@ def main():
         escreve_arquivo_area(pasta, todas_publicacoes)
         escreve_sumario_area(pasta, resumo)
         escreve_erros_area(pasta, erros_xml)
-        escreve_arquivo_pontuacao(pasta, avaliacao)
+        escreve_arquivo_pontuacao(pastas[0], avaliacao)
         erros_xml.clear()
         for r in range(len(resumo)):
             resumo_total[r] += resumo[r]
