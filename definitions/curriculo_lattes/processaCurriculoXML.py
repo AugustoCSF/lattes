@@ -2,9 +2,13 @@ import zipfile
 import io
 import os
 import sys
+from pathlib import Path
 from curriculo_model import CurriculoVitae
 from xsdata.formats.dataclass.parsers import XmlParser
 from xsdata.formats.dataclass.serializers import JsonSerializer
+
+# Pasta de saída padrão: curriculos-json/ na raiz do projeto (dois níveis acima deste script)
+_PASTA_SAIDA_PADRAO = Path(__file__).parents[2] / "curriculos-json"
 
 def name_from_xml(xml_filename, curriculo_obj):
     nome_pesquisador = curriculo_obj.dados_gerais.nome_completo
@@ -33,6 +37,7 @@ def processar_xml_lattes(caminho_xml, pasta_saida):
             f.write(serializer.render(curriculo_obj))
 
         print(f"Convertido: {caminho_xml}")
+        print(f"Salvo em:   {caminho_json}")
 
     except Exception as e:
         print(f"Erro ao processar {caminho_xml}: {e}")
@@ -50,7 +55,7 @@ def processar_zip_lattes(caminho_zip, pasta_saida):
         # Lista todos os arquivos dentro do ZIP que terminam em .xml
         arquivos_xml = [f for f in z.namelist() if f.lower().endswith('.xml')]
         
-        print(f"Encontrados {len(arquivos_xml)} currículos no arquivo ZIP.")
+        print(f"Encontrados {len(arquivos_xml)} curriculos no arquivo ZIP.")
 
         for nome_arquivo in arquivos_xml:
             try:
@@ -67,7 +72,7 @@ def processar_zip_lattes(caminho_zip, pasta_saida):
                 with open(caminho_json, "w", encoding="utf-8") as f:
                     f.write(serializer.render(curriculo_obj))
 
-                print(f"Convertido: {nome_arquivo}")
+                print(f"Convertido: {nome_arquivo} -> {caminho_json}")
 
             except Exception as e:
                 print(f"Erro ao processar {nome_arquivo}: {e}")
@@ -80,18 +85,17 @@ def __main():
         print(f"\tpython {sys.argv[0]} <arquivo_xml> [pasta_saida]\n")
         print("Uso arquivo zip:")
         print(f"\tpython {sys.argv[0]} <arquivo_zip> [pasta_saida]\n")
-        print("\tarquivo xml: XML do curriculo lattes")
-        print("\tarquivo zip: ZIP com XMLs dos currículos lattes")
-        print("\tpasta_saida: Pasta onde os arquivos JSON serão salvos (opcional, padrão: pasta atual)\n")
+        print("\tarquivo xml: XML do curriculo Lattes")
+        print("\tarquivo zip: ZIP com XMLs dos curriculos Lattes")
+        print(f"\tpasta_saida: Pasta onde os JSONs serao salvos (padrao: {_PASTA_SAIDA_PADRAO})\n")
 
-    if not (len(sys.argv) in [2,3]):
-        syntax()        
+    if not (len(sys.argv) in [2, 3]):
+        syntax()
         exit(-1)
-    elif (len(sys.argv) == 3):
+    elif len(sys.argv) == 3:
         output_folder = sys.argv[2]
     else:
-        output_folder = "."
-    
+        output_folder = str(_PASTA_SAIDA_PADRAO)
 
     if sys.argv[1][-4:] not in [".zip", ".xml"]:
         print("Erro: O arquivo deve ser um .zip ou .xml\n")
@@ -108,3 +112,4 @@ def __main():
 
 if __name__ == "__main__":
     __main()
+

@@ -1,0 +1,62 @@
+# barema_teste.toml — config modificado para comparação
+# Alterações em relação ao barema.toml original:
+#   - qualis_a1 de 10 para 15 (+50%)
+#   - qualis_a2 de 8 para 12
+#   - tese_doutorado de 15 para 20
+#   - tcc_graduacao reduzido de 1 para 0 (não pontua mais)
+#   - janela ampliada de 5 para 6 anos (inclui 2020 também)
+
+[geral]
+ano_fim = 2026
+janela  = 6   # antes era 5 — agora avalia 2020..2025
+
+[titulacao]
+doutorado   = 60   # antes era 50
+mestrado    = 30
+bolsista_pq = 20
+
+[limites]
+trabalhos_internacional = 16
+trabalhos_nacional      = 8
+tcc_especializacao      = 6
+tcc_graduacao           = 5
+
+[perfis.H]
+nome = "Ciencias Humanas e Sociais Aplicadas (TESTE)"
+
+[perfis.H.pesos]
+artigo_jcr               = 10
+qualis_a1                = 15   # era 10
+qualis_a2                = 12   # era 8
+qualis_a3                = 6
+qualis_a4                = 4
+qualis_b1_b2             = 2
+qualis_b3_b4             = 1
+livro_tecnico            = 10
+organizacao_edicao_livro = 5
+capitulo_livro           = 5
+trabalhos_internacional  = 4
+trabalhos_nacional       = 2
+bolsista_pq              = 20
+editor_internacional     = 5
+editor_nacional          = 3
+organizacao_eventos      = 3
+traducao_livro           = 0
+traducao_artigo          = 0
+curadoria                = 0
+organizacao_festival     = 0
+producao_visual          = 0
+producao_musical         = 0
+artes_cenicas            = 0
+programa_computador      = 0
+patente_depositada       = 0
+patente_concedida        = 0
+patente_licenciada       = 0
+material_didatico        = 3
+tese_doutorado           = 20   # era 15
+dissertacao_mestrado     = 10
+tcc_especializacao       = 2
+iniciacao_cientifica     = 5
+tcc_graduacao            = 0    # era 1 — removido
+supervisao_pos_doc       = 10
+

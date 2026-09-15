@@ -1,0 +1,186 @@
+# =============================================================================
+# barema.toml — Configuração do cálculo do barema PROPESQ
+# =============================================================================
+# Formato: TOML (https://toml.io)
+#
+# Como editar:
+#   - Altere os valores numéricos à direita do "=" em cada perfil
+#   - Peso 0 significa que o item não vale pontos naquele perfil
+#   - "limite = 0" significa sem limite máximo de pontuação para aquele item
+#   - Adicione novos perfis copiando um bloco [perfis.X] existente
+# =============================================================================
+
+
+# -----------------------------------------------------------------------------
+# Janela temporal de avaliação
+# -----------------------------------------------------------------------------
+[geral]
+ano_fim = 2026   # último ano (exclusive) da avaliação
+janela  = 5      # quantos anos retroativos contar a partir de ano_fim
+                 # ex: ano_fim=2026, janela=5 → avalia 2021,2022,2023,2024,2025
+
+
+# -----------------------------------------------------------------------------
+# Pontuação de titulação (bônus fixo somado ao total do pesquisador)
+# -----------------------------------------------------------------------------
+[titulacao]
+doutorado   = 50
+mestrado    = 30
+bolsista_pq = 20   # bônus extra para bolsistas PQ/DT do CNPq
+
+
+# -----------------------------------------------------------------------------
+# Limites máximos de pontuação acumulada no período inteiro
+# (independente de quantos anos a janela tem)
+# 0 = sem limite
+# -----------------------------------------------------------------------------
+[limites]
+trabalhos_internacional = 16   # máx 4 por ano × peso × n_anos, mas teto global
+trabalhos_nacional      = 8
+tcc_especializacao      = 6
+tcc_graduacao           = 5
+
+
+# =============================================================================
+# PERFIS DE AVALIAÇÃO
+# Cada perfil define o peso (pontos por unidade) de cada item de produção.
+# O nome do perfil (A, E, H...) é passado como argumento ao script.
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Perfil A — Letras e Linguística
+# -----------------------------------------------------------------------------
+[perfis.A]
+nome = "Letras e Linguística"
+
+[perfis.A.pesos]
+# Grupo 1 — Produção Técnica, Científica e de Inovação
+artigo_jcr               = 10   # artigo indexado com JCR
+qualis_a1                = 10   # periódico Qualis A1
+qualis_a2                = 8    # periódico Qualis A2
+qualis_a3                = 6    # periódico Qualis A3
+qualis_a4                = 4    # periódico Qualis A4
+qualis_b1_b2             = 2    # periódico Qualis B1 ou B2
+qualis_b3_b4             = 1    # periódico Qualis B3 ou B4
+livro_tecnico            = 10   # publicação de livro técnico-científico (autor)
+organizacao_edicao_livro = 5    # organização/edição de livro com ISBN
+capitulo_livro           = 5    # capítulo de livro (máximo 1 por livro)
+trabalhos_internacional  = 4    # trabalho completo em evento internacional
+trabalhos_nacional       = 2    # trabalho completo em evento nacional
+bolsista_pq              = 20   # atuação como bolsista PQ/DT CNPq (por ano)
+editor_internacional     = 5    # editor de periódico internacional
+editor_nacional          = 3    # editor de periódico nacional
+organizacao_eventos      = 3    # organização de evento técnico-científico
+traducao_livro           = 5    # tradução integral de livro com ISBN
+traducao_artigo          = 3    # tradução de artigo científico
+curadoria                = 5    # curadoria de festival/concerto/exposição/concurso
+organizacao_festival     = 5    # organização de festival/concerto/exposição/concurso
+producao_visual          = 5    # produção visual (filme, foto, vídeo, instalação...)
+producao_musical         = 5    # produção musical (composição, arranjo, partitura...)
+artes_cenicas            = 5    # artes cênicas (teatral, operística, circense...)
+programa_computador      = 0    # programa de computador registrado
+patente_depositada       = 0    # patente depositada no INPI
+patente_concedida        = 0    # patente concedida no INPI
+patente_licenciada       = 0    # patente licenciada
+material_didatico        = 3    # produção de material didático/instrucional
+
+# Grupo 2 — Formação de Recursos Humanos em Pesquisa
+tese_doutorado           = 15   # tese de doutorado orientada e defendida
+dissertacao_mestrado     = 10   # dissertação de mestrado orientada e defendida
+tcc_especializacao       = 2    # TCC/monografia de especialização lato sensu
+iniciacao_cientifica     = 5    # orientação de iniciação científica concluída
+tcc_graduacao            = 1    # TCC/monografia de graduação orientada e defendida
+supervisao_pos_doc       = 10   # supervisão de pós-doutorado
+
+
+# -----------------------------------------------------------------------------
+# Perfil E — Ciências Exatas e Engenharias
+# -----------------------------------------------------------------------------
+[perfis.E]
+nome = "Ciências Exatas e Engenharias"
+
+[perfis.E.pesos]
+# Grupo 1
+artigo_jcr               = 10
+qualis_a1                = 10
+qualis_a2                = 8
+qualis_a3                = 6
+qualis_a4                = 4
+qualis_b1_b2             = 2
+qualis_b3_b4             = 1
+livro_tecnico            = 10
+organizacao_edicao_livro = 5
+capitulo_livro           = 5
+trabalhos_internacional  = 4
+trabalhos_nacional       = 2
+bolsista_pq              = 20
+editor_internacional     = 5
+editor_nacional          = 3
+organizacao_eventos      = 0    # não pontuado neste perfil
+traducao_livro           = 0
+traducao_artigo          = 0
+curadoria                = 0
+organizacao_festival     = 0
+producao_visual          = 0
+producao_musical         = 0
+artes_cenicas            = 0
+programa_computador      = 10   # software registrado vale pontos aqui
+patente_depositada       = 10
+patente_concedida        = 20
+patente_licenciada       = 30
+material_didatico        = 0
+
+# Grupo 2
+tese_doutorado           = 15
+dissertacao_mestrado     = 10
+tcc_especializacao       = 2
+iniciacao_cientifica     = 5
+tcc_graduacao            = 1
+supervisao_pos_doc       = 10
+
+
+# -----------------------------------------------------------------------------
+# Perfil H — Ciências Humanas e Sociais Aplicadas
+# -----------------------------------------------------------------------------
+[perfis.H]
+nome = "Ciências Humanas e Sociais Aplicadas"
+
+[perfis.H.pesos]
+# Grupo 1
+artigo_jcr               = 10
+qualis_a1                = 10
+qualis_a2                = 8
+qualis_a3                = 6
+qualis_a4                = 4
+qualis_b1_b2             = 2
+qualis_b3_b4             = 1
+livro_tecnico            = 10
+organizacao_edicao_livro = 5
+capitulo_livro           = 5
+trabalhos_internacional  = 4
+trabalhos_nacional       = 2
+bolsista_pq              = 20
+editor_internacional     = 5
+editor_nacional          = 3
+organizacao_eventos      = 3
+traducao_livro           = 0
+traducao_artigo          = 0
+curadoria                = 0
+organizacao_festival     = 0
+producao_visual          = 0
+producao_musical         = 0
+artes_cenicas            = 0
+programa_computador      = 0
+patente_depositada       = 0
+patente_concedida        = 0
+patente_licenciada       = 0
+material_didatico        = 3
+
+# Grupo 2
+tese_doutorado           = 15
+dissertacao_mestrado     = 10
+tcc_especializacao       = 2
+iniciacao_cientifica     = 5
+tcc_graduacao            = 1
+supervisao_pos_doc       = 10
+
