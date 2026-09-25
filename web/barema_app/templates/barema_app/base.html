@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}PROPESQ — Barema Lattes{% endblock %}</title>
+    <style>
+        :root {
+            --primary: #1a73e8;
+            --primary-light: #e8f0fe;
+            --primary-dark: #1557b0;
+            --bg: #f5f5f5;
+            --card-bg: #ffffff;
+            --text: #202124;
+            --text-secondary: #5f6368;
+            --border: #dadce0;
+            --success: #1e8e3e;
+            --success-light: #e6f4ea;
+            --danger: #d93025;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        .header h1 {
+            font-size: 1.8rem;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+        .header p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* Step indicator */
+        .steps {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0;
+            margin-bottom: 28px;
+        }
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        .step.active  { color: var(--primary); font-weight: 600; }
+        .step.done    { color: var(--success); }
+
+        .step-num {
+            width: 28px; height: 28px;
+            border-radius: 50%;
+            border: 2px solid currentColor;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.8rem; font-weight: 700;
+        }
+        .step.active .step-num {
+            background: var(--primary); color: #fff; border-color: var(--primary);
+        }
+        .step.done .step-num {
+            background: var(--success); color: #fff; border-color: var(--success);
+        }
+        .step-line {
+            width: 40px; height: 2px;
+            background: var(--border);
+            margin: 0 2px;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,.1);
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+        .card h2 {
+            font-size: 1.15rem;
+            margin-bottom: 14px;
+            color: var(--text);
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 8px;
+        }
+        .card h3 {
+            font-size: 1rem;
+            margin: 16px 0 10px;
+            color: var(--text-secondary);
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 14px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 4px;
+            font-size: 0.9rem;
+        }
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 0.9rem;
+            font-family: inherit;
+        }
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px var(--primary-light);
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        .form-row-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 16px;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 10px 24px;
+            border: none;
+            border-radius: 4px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background .2s;
+            font-family: inherit;
+        }
+        .btn-primary { background: var(--primary); color: #fff; }
+        .btn-primary:hover { background: var(--primary-dark); }
+        .btn-secondary {
+            background: #f1f3f4; color: var(--text);
+            border: 1px solid var(--border);
+        }
+        .btn-secondary:hover { background: #e8eaed; }
+        .btn-success { background: var(--success); color: #fff; }
+        .btn-success:hover { background: #1a7c35; }
+
+        /* Alerts */
+        .alert {
+            padding: 12px 16px;
+            border-radius: 6px;
+            margin-bottom: 16px;
+            font-size: 0.9rem;
+        }
+        .alert-error {
+            background: #fce8e6; color: var(--danger);
+            border: 1px solid #f5c6cb;
+        }
+        .alert-info {
+            background: var(--primary-light); color: var(--primary-dark);
+            border: 1px solid #c2d7f2;
+        }
+        .alert-success {
+            background: var(--success-light); color: var(--success);
+            border: 1px solid #a8dab5;
+        }
+
+        /* Pesos table */
+        .pesos-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .pesos-table th,
+        .pesos-table td {
+            padding: 7px 10px;
+            text-align: left;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .pesos-table th {
+            background: #f8f9fa;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            position: sticky; top: 0;
+        }
+        .pesos-table td:last-child { width: 100px; }
+        .pesos-table input[type="number"] {
+            width: 80px;
+            padding: 4px 8px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            text-align: center;
+            font-family: inherit;
+        }
+        .pesos-table input[type="number"]:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px var(--primary-light);
+        }
+
+        /* Upload area */
+        .upload-area {
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+            padding: 36px;
+            text-align: center;
+            transition: border-color .2s, background .2s;
+        }
+        .upload-area:hover {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+        .upload-area input[type="file"] {
+            display: block;
+            margin: 12px auto 0;
+            font-family: inherit;
+        }
+        .upload-icon { font-size: 2.5rem; margin-bottom: 8px; }
+        .upload-area p { color: var(--text-secondary); margin-bottom: 6px; }
+
+        /* Details / summary */
+        details { margin-bottom: 8px; }
+        details summary {
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--primary);
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 0.95rem;
+        }
+        details summary:hover { background: var(--primary-light); }
+        details[open] summary { margin-bottom: 8px; }
+
+        /* Result cards */
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+        .result-item {
+            text-align: center;
+            padding: 16px 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        .result-item .value {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary);
+            word-break: break-word;
+        }
+        .result-item .label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .result-iframe {
+            width: 100%;
+            min-height: 600px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            background: #fff;
+        }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .form-row, .form-row-3 { grid-template-columns: 1fr; }
+            .result-grid { grid-template-columns: 1fr 1fr; }
+            .steps { flex-wrap: wrap; }
+        }
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎓 PROPESQ — Barema Lattes</h1>
+            <p>Avaliação de produção acadêmica com barema customizável</p>
+        </div>
+
+        <div class="steps">
+            <div class="step {% block step1_class %}{% endblock %}">
+                <span class="step-num">1</span>
+                <span>Upload</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="step {% block step2_class %}{% endblock %}">
+                <span class="step-num">2</span>
+                <span>Configurar</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="step {% block step3_class %}{% endblock %}">
+                <span class="step-num">3</span>
+                <span>Resultado</span>
+            </div>
+        </div>
+
+        {% block content %}{% endblock %}
+    </div>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

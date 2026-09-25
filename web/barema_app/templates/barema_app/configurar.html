@@ -1,0 +1,161 @@
+{% extends "barema_app/base.html" %}
+
+{% block title %}Configurar Barema — PROPESQ{% endblock %}
+{% block step1_class %}done{% endblock %}
+{% block step2_class %}active{% endblock %}
+
+{% block content %}
+<div class="alert alert-info">
+    📄 Arquivo: <strong>{{ arquivo_nome }}</strong> &nbsp;|&nbsp;
+    Perfil base: <strong>{{ perfil }} — {{ perfil_nome }}</strong>
+</div>
+
+<form method="post">
+    {% csrf_token %}
+    <input type="hidden" name="perfil_nome" value="{{ perfil_nome }}">
+
+    {# ─── Geral ──────────────────────────────────────────────── #}
+    <div class="card">
+        <h2>⚙️ Configurações Gerais</h2>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="ano_fim">Ano final da avaliação (exclusive)</label>
+                <input type="number" id="ano_fim" name="ano_fim"
+                       value="{{ geral.ano_fim }}" min="2000" max="2100">
+            </div>
+            <div class="form-group">
+                <label for="janela">Janela de anos retroativos</label>
+                <input type="number" id="janela" name="janela"
+                       value="{{ geral.janela }}" min="1" max="20">
+            </div>
+        </div>
+        <p style="color: var(--text-secondary); font-size: 0.85rem;">
+            Anos avaliados: <strong><span id="anos-preview"></span></strong>
+        </p>
+    </div>
+
+    {# ─── Titulação ──────────────────────────────────────────── #}
+    <div class="card">
+        <h2>🎓 Pontuação de Titulação</h2>
+        <div class="form-row-3">
+            <div class="form-group">
+                <label for="tit_doutorado">Doutorado</label>
+                <input type="number" id="tit_doutorado" name="tit_doutorado"
+                       value="{{ titulacao.doutorado }}" min="0">
+            </div>
+            <div class="form-group">
+                <label for="tit_mestrado">Mestrado</label>
+                <input type="number" id="tit_mestrado" name="tit_mestrado"
+                       value="{{ titulacao.mestrado }}" min="0">
+            </div>
+            <div class="form-group">
+                <label for="tit_bolsista_pq">Bônus Bolsista PQ/DT</label>
+                <input type="number" id="tit_bolsista_pq" name="tit_bolsista_pq"
+                       value="{{ titulacao.bolsista_pq }}" min="0">
+            </div>
+        </div>
+    </div>
+
+    {# ─── Pesos G1 ───────────────────────────────────────────── #}
+    <div class="card">
+        <h2>📚 Pesos — Produção Técnica, Científica e de Inovação</h2>
+        <table class="pesos-table">
+            <thead>
+                <tr>
+                    <th>Item de Produção</th>
+                    <th style="text-align:center">Peso (pts/un.)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for key, label, val in pesos_g1 %}
+                <tr>
+                    <td>{{ label }}</td>
+                    <td>
+                        <input type="number" name="peso_{{ key }}"
+                               value="{{ val }}" min="0">
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {# ─── Pesos G2 ───────────────────────────────────────────── #}
+    <div class="card">
+        <h2>👥 Pesos — Formação de Recursos Humanos</h2>
+        <table class="pesos-table">
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th style="text-align:center">Peso (pts/un.)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for key, label, val in pesos_g2 %}
+                <tr>
+                    <td>{{ label }}</td>
+                    <td>
+                        <input type="number" name="peso_{{ key }}"
+                               value="{{ val }}" min="0">
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {# ─── Limites ────────────────────────────────────────────── #}
+    <div class="card">
+        <h2>🚫 Limites Máximos de Pontuação</h2>
+        <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 12px;">
+            Limite máximo de pontuação acumulada no período inteiro.
+            <strong>0 = sem limite</strong>.
+        </p>
+        <details>
+            <summary>Exibir / editar limites por item</summary>
+            <table class="pesos-table" style="margin-top: 8px;">
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th style="text-align:center">Limite (0 = sem)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for key, label, val in limites_items %}
+                    <tr{% if val > 0 %} style="background:#fffde7"{% endif %}>
+                        <td>{{ label }}</td>
+                        <td>
+                            <input type="number" name="limite_{{ key }}"
+                                   value="{{ val }}" min="0">
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </details>
+    </div>
+
+    {# ─── Botões ─────────────────────────────────────────────── #}
+    <div class="actions">
+        <a href="{% url 'upload' %}" class="btn btn-secondary">← Voltar</a>
+        <button type="submit" class="btn btn-primary">Calcular Barema →</button>
+    </div>
+</form>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function() {
+    function updatePreview() {
+        var anoFim = parseInt(document.getElementById('ano_fim').value) || 2026;
+        var janela = parseInt(document.getElementById('janela').value) || 5;
+        var anos = [];
+        for (var a = anoFim - janela; a < anoFim; a++) anos.push(a);
+        document.getElementById('anos-preview').textContent = anos.join(', ');
+    }
+    document.getElementById('ano_fim').addEventListener('input', updatePreview);
+    document.getElementById('janela').addEventListener('input', updatePreview);
+    updatePreview();
+})();
+</script>
+{% endblock %}

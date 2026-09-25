@@ -1,0 +1,73 @@
+{% extends "barema_app/base.html" %}
+
+{% block title %}Resultado — PROPESQ Barema{% endblock %}
+{% block step1_class %}done{% endblock %}
+{% block step2_class %}done{% endblock %}
+{% block step3_class %}active{% endblock %}
+
+{% block content %}
+{% if erro %}
+    <div class="alert alert-error">⚠ {{ erro }}</div>
+    <div class="actions">
+        <a href="{% url 'configurar' %}" class="btn btn-secondary">← Voltar à Configuração</a>
+        <a href="{% url 'upload' %}" class="btn btn-secondary">Novo Upload</a>
+    </div>
+{% else %}
+
+    {# ─── Resumo ─────────────────────────────────────────────── #}
+    <div class="card">
+        <h2>📊 Resumo da Avaliação</h2>
+        <div class="result-grid">
+            <div class="result-item">
+                <div class="value">{{ nome }}</div>
+                <div class="label">Pesquisador(a)</div>
+            </div>
+            <div class="result-item">
+                <div class="value">{{ perfil }}</div>
+                <div class="label">{{ perfil_nome }}</div>
+            </div>
+            <div class="result-item">
+                <div class="value">{{ titulacao }}</div>
+                <div class="label">Titulação{% if bolsista_pq %} · Bolsista PQ{% endif %}</div>
+            </div>
+            <div class="result-item">
+                <div class="value" style="font-size: 2rem; color: var(--success);">
+                    {{ pontuacao_total }}
+                </div>
+                <div class="label">Pontuação Total</div>
+            </div>
+        </div>
+
+        <h3>Pontuação por Ano</h3>
+        <div class="result-grid" style="margin-top: 10px;">
+            {% for ano, pts in pontuacao_por_ano %}
+            <div class="result-item">
+                <div class="value" style="font-size: 1.15rem;">{{ pts }}</div>
+                <div class="label">{{ ano }}</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    {# ─── Relatório completo ─────────────────────────────────── #}
+    <div class="card">
+        <h2>📋 Relatório Completo</h2>
+        <iframe srcdoc="{{ html_resultado }}" class="result-iframe"
+                title="Relatório do Barema"></iframe>
+    </div>
+
+    {# ─── Ações ──────────────────────────────────────────────── #}
+    <div class="actions">
+        <a href="{% url 'configurar' %}" class="btn btn-secondary">
+            ← Modificar Configuração
+        </a>
+        <a href="{% url 'download' %}" class="btn btn-success">
+            ⬇ Download HTML
+        </a>
+        <a href="{% url 'upload' %}" class="btn btn-secondary">
+            Novo Upload
+        </a>
+    </div>
+
+{% endif %}
+{% endblock %}

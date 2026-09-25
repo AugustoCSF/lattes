@@ -54,6 +54,21 @@ def recarregar_config(caminho: Optional[str | Path] = None) -> dict:
     return _cfg
 
 
+def recarregar_config_dict(config_dict: dict) -> dict:
+    """Carrega configuração a partir de um dicionário Python (sem ler arquivo).
+
+    Útil para injetar configurações em memória (ex: vindas de formulário web)
+    sem precisar escrever um arquivo TOML temporário.
+
+    Nota: altera o estado global do módulo — não é thread-safe.
+    Para uso em servidor multi-thread, considere refatorar para injeção
+    de dependência no construtor de PesquisadorConfig.
+    """
+    global _cfg
+    _cfg = config_dict
+    return _cfg
+
+
 def _get_cfg() -> dict:
     """Garante que o config já foi carregado."""
     if not _cfg:

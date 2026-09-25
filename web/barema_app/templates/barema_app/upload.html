@@ -1,0 +1,46 @@
+{% extends "barema_app/base.html" %}
+
+{% block title %}Upload — PROPESQ Barema{% endblock %}
+{% block step1_class %}active{% endblock %}
+
+{% block content %}
+{% if erro %}
+<div class="alert alert-error">⚠ {{ erro }}</div>
+{% endif %}
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <div class="card">
+        <h2>📄 Upload do Currículo Lattes</h2>
+        <div class="upload-area">
+            <div class="upload-icon">📁</div>
+            <p><strong>Selecione o arquivo do currículo</strong></p>
+            <p>Formatos aceitos: <strong>XML</strong> (direto do Lattes) ou <strong>JSON</strong> (convertido)</p>
+            <input type="file" name="arquivo" accept=".xml,.json" required>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>📊 Perfil de Avaliação Base</h2>
+        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 12px;">
+            Selecione o perfil que será usado como ponto de partida.
+            Você poderá <strong>customizar todos os pesos</strong> no próximo passo.
+        </p>
+        <div class="form-group">
+            <label for="perfil">Perfil</label>
+            <select name="perfil" id="perfil">
+                {% for codigo, nome in perfis %}
+                <option value="{{ codigo }}">{{ codigo }} — {{ nome }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 20px;">
+        <button type="submit" class="btn btn-primary">
+            Próximo: Configurar Barema →
+        </button>
+    </div>
+</form>
+{% endblock %}
